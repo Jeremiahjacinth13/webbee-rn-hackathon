@@ -8,7 +8,8 @@ export const getDefaultCategory = () => {
     const category: TCategory = {
         id: generateRandomUUID(),
         name: "New Category",
-        fields: [{ key: "", type: CategoryFieldType.text, id: generateRandomUUID() }]
+        fields: [{ key: "", type: CategoryFieldType.text, id: generateRandomUUID() }],
+        titleField: null
     }
 
     return category

@@ -15,5 +15,6 @@ export interface CategoryFields {
 export interface Category {
     id: string,
     name: string,
-    fields: CategoryFields[]
+    fields: CategoryFields[],
+    titleField: string | null,
 }

@@ -2,11 +2,12 @@ import * as React from 'react'
 import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { CategoryFieldType, Category as TCategory } from '../../types'
 import Divider from './divider'
-import FieldTypeSelect from './fieldtypeselect'
+import Select from './select'
 import Button from './button'
 import { generateRandomUUID } from '../../utils'
 import { deleteCategory, editCategory } from '../../store/categorySlice'
 import { useAppDispatch } from '../../hooks'
+import { categoryFieldTypes } from '../../constants'
 
 export default function Category(props: TCategory) {
 
@@ -87,6 +88,8 @@ export default function Category(props: TCategory) {
                 </View>
             </View>
 
+            <Text style = {{ fontSize: 12, marginBottom: -6 }}>Category name:</Text>
+
             <TextInput
                 style={categoryStyles.textInput}
                 onChangeText={(text) => setCategoryState({ ...categoryState, name: text })}
@@ -94,13 +97,17 @@ export default function Category(props: TCategory) {
                 value={categoryState.name}
             />
 
-            <Divider style={{ height: 1, backgroundColor: '#FFFFFFef', marginVertical: 4 }} />
+            <Divider style={{ marginVertical: 4 }} />
 
-            <Text>Fields: </Text>
+            <Text style = {{ fontSize: 12, marginBottom: -6 }}>Fields:</Text>
 
             {categoryState.fields.map(field => (
                 <View key={field.id} style={{ flexDirection: 'row', columnGap: 4 }}>
-                    <FieldTypeSelect onChange={(newValue) => handleFieldChange(field.id, 'type', newValue)} />
+                    <Select
+                        options={categoryFieldTypes}
+                        defaultValue={field.type || CategoryFieldType.text}
+                        onChange={(newValue) => handleFieldChange(field.id, 'type', newValue)}
+                    />
                     <TextInput
                         autoCapitalize='none'
                         style={{ ...categoryStyles.textInput, flex: 2 }}
@@ -115,6 +122,17 @@ export default function Category(props: TCategory) {
             ))}
 
             <Button onPress={() => setCategoryState({ ...categoryState, fields: [...categoryState.fields, { key: "", type: CategoryFieldType.text, id: generateRandomUUID() }] })}>Add New Field</Button>
+
+            <Divider style={{ marginVertical: 6 }} />
+
+            <Text style = {{ fontSize: 12, marginBottom: -6 }}>Title field:</Text>
+            <Select
+                onChange={(newValue) => setCategoryState({ ...categoryState, titleField: newValue })}
+                options={categoryState.fields.map(field => field.key)}
+                buttonStyle = {{
+                    width: '100%'
+                }}
+            />
         </View>
     )
 }
