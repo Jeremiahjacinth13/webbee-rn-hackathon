@@ -13,3 +13,7 @@ export const getDefaultCategory = () => {
 
     return category
 }
+
+export function debounce(func: Function, time: number) {
+
+}

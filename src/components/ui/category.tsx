@@ -5,7 +5,7 @@ import Divider from './divider'
 import FieldTypeSelect from './fieldtypeselect'
 import Button from './button'
 import { generateRandomUUID } from '../../utils'
-import { deleteCategory } from '../../store/categorySlice'
+import { deleteCategory, editCategory } from '../../store/categorySlice'
 import { useAppDispatch } from '../../hooks'
 
 export default function Category(props: TCategory) {
@@ -13,6 +13,11 @@ export default function Category(props: TCategory) {
     const [categoryState, setCategoryState] = React.useState<TCategory>(props)
     const [isCollapsed, setCollapsed] = React.useState<boolean>(false)
     const dispatch = useAppDispatch()
+
+
+    React.useEffect(() => {
+        dispatch(editCategory(categoryState))
+    }, [categoryState])
 
     const handleFieldChange = React.useCallback((id: string, key: string, value: string) => {
         setCategoryState(oldCategory => {

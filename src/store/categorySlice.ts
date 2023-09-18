@@ -24,10 +24,16 @@ export const categorySlice = createSlice({
             } else {
                 state.categories = state.categories.filter(c => c !== action.payload)
             }
+        },
+        editCategory: (state, action: PayloadAction<Category>) => {
+            const categoryIndex = state.categories.findIndex(c => c.id == action.payload.id)
+            if (categoryIndex !== -1) {
+                state.categories[categoryIndex] = action.payload
+            }
         }
     },
 })
 
-export const { createCategory, deleteCategory } = categorySlice.actions
+export const { createCategory, deleteCategory, editCategory } = categorySlice.actions
 
 export default categorySlice.reducer
