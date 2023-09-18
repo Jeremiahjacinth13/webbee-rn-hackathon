@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import categoryReducer from './categorySlice'
+import machinReducer from './machineSlice'
 
 export const store = configureStore({
   reducer: {
-    categories: categoryReducer
+    categories: categoryReducer,
+    machines: machinReducer
   },
 })
 

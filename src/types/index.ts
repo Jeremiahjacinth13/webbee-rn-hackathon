@@ -18,3 +18,13 @@ export interface Category {
     fields: CategoryFields[],
     titleField: string | null,
 }
+
+export interface Machine {
+    id: string,
+    typeId: Category['id'],
+    attributes: {
+        key: string,
+        type: CategoryFieldType,
+        value: string | boolean | number | Date
+    }[]
+}
