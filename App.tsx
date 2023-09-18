@@ -8,13 +8,16 @@ import { DashboardScreen, CategoriesScreen, SingleCategoryScreen } from './src/s
 import { Provider } from 'react-redux'
 import { store } from './src/store';
 import { useAppSelector } from './src/hooks';
+import SyncStoreLocal from './src/utils/syncstorelocal';
 
 const Drawer = createDrawerNavigator()
 
 export default function App() {
   return (
     <Provider store={store}>
-      <Routes />
+      <SyncStoreLocal>
+        <Routes />
+      </SyncStoreLocal>
     </Provider>
   );
 }

@@ -1,16 +1,16 @@
 import * as React from 'react'
-import { Pressable, PressableProps, StyleSheet, Text } from "react-native";
+import { TouchableOpacityProps, StyleSheet, Text, TouchableOpacity } from "react-native";
 
-interface ButtonProps extends PressableProps {
+interface ButtonProps extends TouchableOpacityProps {
     hasTextHasDirectChild?: boolean,
     children: React.ReactNode
 }
 
 export default function Button({ children, style, hasTextHasDirectChild = true, ...otherProps }: ButtonProps) {
     return (
-        <Pressable style={StyleSheet.flatten([pressableStyle.base, style])} {...otherProps}>
+        <TouchableOpacity activeOpacity={0.8} style={StyleSheet.flatten([pressableStyle.base, style])} {...otherProps}>
             {hasTextHasDirectChild ? <Text style={{ color: 'white' }}>{children}</Text> : children}
-        </Pressable>
+        </TouchableOpacity>
     )
 }
 

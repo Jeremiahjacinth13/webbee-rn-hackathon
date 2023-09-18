@@ -14,7 +14,7 @@ export default function Category(props: TCategory) {
     const [categoryState, setCategoryState] = React.useState<TCategory>(props)
     const [isCollapsed, setCollapsed] = React.useState<boolean>(false)
     const dispatch = useAppDispatch()
-    const debouncedDispatch = debounce(dispatch, 500)
+    const debouncedDispatch = React.useMemo(() => debounce(dispatch, 500), [])
 
 
     React.useEffect(() => {

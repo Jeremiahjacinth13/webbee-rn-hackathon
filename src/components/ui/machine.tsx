@@ -7,7 +7,8 @@ import Button from './button'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { editMachine, deleteMachine } from '../../store/machineSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks'
-import { categoryFieldTypes } from '../../constants'
+import { debounce } from '../../utils'
+
 
 export default function Machine(props: TMachine) {
 
@@ -18,9 +19,10 @@ export default function Machine(props: TMachine) {
     const [isCollapsed, setCollapsed] = React.useState<boolean>(false)
     const dispatch = useAppDispatch()
 
+    const debouncedDispatch = React.useMemo(() => debounce(dispatch, 500), [])
 
     React.useEffect(() => {
-        dispatch(editMachine(machineState))
+        debouncedDispatch(editMachine(machineState))
     }, [machineState])
 
     const handleAttributeChange = React.useCallback(({ key, value, id, type }: TMachine['attributes'][number]) => {
@@ -89,6 +91,7 @@ export default function Machine(props: TMachine) {
                     <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
                         <Text style={machineStyles.fieldLabel}>{attr.key}: </Text>
                         <Switch
+                            trackColor={{ false: "#767577", true: "#81b0ff" }}
                             onValueChange={value => handleAttributeChange({ ...attr, value })}
                             value={Boolean(machineState.attributes.find(a => a.id === attr.id)?.value)}
                         />
