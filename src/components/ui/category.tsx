@@ -5,18 +5,21 @@ import Divider from './divider'
 import FieldTypeSelect from './fieldtypeselect'
 import Button from './button'
 import { generateRandomUUID } from '../../utils'
+import { deleteCategory } from '../../store/categorySlice'
+import { useAppDispatch } from '../../hooks'
 
 export default function Category(props: TCategory) {
 
     const [categoryState, setCategoryState] = React.useState<TCategory>(props)
     const [isCollapsed, setCollapsed] = React.useState<boolean>(false)
+    const dispatch = useAppDispatch()
 
     const handleFieldChange = React.useCallback((id: string, key: string, value: string) => {
         setCategoryState(oldCategory => {
             const fields = [...oldCategory.fields]
             const index = fields.findIndex(field => field.id === id)
-        
-            fields[index] = {...fields[index], [key]: value }
+
+            fields[index] = { ...fields[index], [key]: value }
             return { ...oldCategory, fields }
         })
     }, [])
@@ -46,8 +49,18 @@ export default function Category(props: TCategory) {
                     <Text>Number of fields: {categoryState.fields.length}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
-                    <Button style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}>Delete</Button>
-                    <Button style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }} onPress={() => setCollapsed(false)}>Edit</Button>
+                    <Button
+                        style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}
+                        onPress={() => dispatch(deleteCategory(categoryState.id))}
+                    >
+                        Delete
+                    </Button>
+                    <Button
+                        style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }}
+                        onPress={() => setCollapsed(false)}
+                    >
+                        Edit
+                    </Button>
                 </View>
             </View>
         )
@@ -64,7 +77,7 @@ export default function Category(props: TCategory) {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={categoryStyles.title}>{categoryState.name || ' '}</Text>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
-                    <Button style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}>Delete</Button>
+                    <Button onPress={() => dispatch(deleteCategory(categoryState.id))} style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}>Delete</Button>
                     <Button onPress={() => setCollapsed(true)} style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }}>Collapse</Button>
                 </View>
             </View>

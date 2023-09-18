@@ -18,11 +18,11 @@ export const categorySlice = createSlice({
         createCategory: (state, action: PayloadAction<Category>) => {
             state.categories.push(action.payload)
         },
-        deleteCategory: (state, action: PayloadAction<Category | number>) => {
-            if (typeof action.payload === 'number') {
-                state.categories = state.categories.filter((_, i) => i === action.payload)
+        deleteCategory: (state, action: PayloadAction<Category | string>) => {
+            if (typeof action.payload === 'string') {
+                state.categories = state.categories.filter(c => c.id !== action.payload)
             } else {
-                state.categories = state.categories.filter(category => category === action.payload)
+                state.categories = state.categories.filter(c => c !== action.payload)
             }
         }
     },

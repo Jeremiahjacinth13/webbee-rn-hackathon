@@ -4,9 +4,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { DashboardScreen, CategoriesScreen } from './src/screens';
+import { DashboardScreen, CategoriesScreen, SingleCategoryScreen } from './src/screens';
 import { Provider } from 'react-redux'
 import { store } from './src/store';
+import { useAppSelector } from './src/hooks';
 
 const Drawer = createDrawerNavigator()
 
@@ -21,12 +22,8 @@ export default function App() {
 
 
 function Routes() {
-  const categories = [
-    { id: 'newin1', title: 'New In 1' },
-    { id: 'newin2', title: 'New In 2' },
-    { id: 'newin3', title: 'New In 3' },
-    { id: 'newin4', title: 'New In 4' },
-  ]
+
+  const { categories } = useAppSelector(store => store.categories)
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Categories">
@@ -37,7 +34,7 @@ function Routes() {
           options={{ headerTitle: "Manage Categories" }}
         />
         {categories.map(category => (
-          <Drawer.Screen key={category.id} name={category.title} component={CategoriesScreen} />
+          <Drawer.Screen key={category.id} name={category.id} component={SingleCategoryScreen} options={{ drawerLabel: category.name, headerTitle: category.name }} />
         ))}
       </Drawer.Navigator>
     </NavigationContainer>

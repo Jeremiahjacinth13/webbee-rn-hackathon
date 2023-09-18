@@ -28,12 +28,11 @@ export default function CategoryScreen() {
                 numColumns={columnCount}
                 ListHeaderComponent={() => (
                     <View style={styles.header}>
-                        <Text>Category Screen</Text>
+                        <Text style={{ fontSize: 24, fontWeight: '500' }}>Add Category</Text>
                         <Button
                             style={styles.iconButton}
                             onPress={() => dispatch(createCategory(getDefaultCategory()))}
-                        >
-                            +
+                        > +
                         </Button>
                     </View>
                 )}
