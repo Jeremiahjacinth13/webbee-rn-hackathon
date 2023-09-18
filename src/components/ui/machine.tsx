@@ -23,7 +23,7 @@ export default function Machine(props: TMachine) {
         dispatch(editMachine(machineState))
     }, [machineState])
 
-    const handleAttributeChange = React.useCallback((key: string, value: TMachine['attributes'][number]['value'], type?: CategoryFieldType) => {
+    const handleAttributeChange = React.useCallback(({ key, value, id, type }: TMachine['attributes'][number]) => {
 
         setMachineState(oldMachineState => {
             const attrs = [...oldMachineState.attributes]
@@ -32,7 +32,7 @@ export default function Machine(props: TMachine) {
             if (attributeIndex !== -1) {
                 attrs[attributeIndex] = { ...attrs[attributeIndex], value }
             } else {
-                attrs.push({ key, value, type })
+                attrs.push({ key, value, type, id })
             }
 
             const newMachineState = { ...oldMachineState, attributes: attrs }
@@ -50,9 +50,9 @@ export default function Machine(props: TMachine) {
                         <TextInput
                             autoCapitalize='none'
                             style={{ ...machineStyles.textInput, flex: 2 }}
-                            onChangeText={(text) => handleAttributeChange(attr.key, text, attr.type)}
+                            onChangeText={(text) => handleAttributeChange({ ...attr, value: text })}
                             placeholder={`Enter ${attr.key}`}
-                            value={machineState.attributes.find(a => a.key === attr.key)?.value.toString() || ''}
+                            value={machineState.attributes.find(a => a.id === attr.id)?.value.toString() || ''}
                         />
                     </View>
                 )
@@ -64,9 +64,9 @@ export default function Machine(props: TMachine) {
                             autoCapitalize='none'
                             keyboardType='numeric'
                             style={{ ...machineStyles.textInput, flex: 2 }}
-                            onChangeText={(text) => handleAttributeChange(attr.key, text, attr.type)}
+                            onChangeText={(text) => handleAttributeChange({ ...attr, value: text })}
                             placeholder={`Enter ${attr.key}`}
-                            value={machineState.attributes.find(a => a.key === attr.key)?.value.toString() || ''}
+                            value={machineState.attributes.find(a => a.id === attr.id)?.value.toString() || ''}
                         />
                     </View>
                 )
@@ -76,10 +76,10 @@ export default function Machine(props: TMachine) {
                         <Text>{attr.key}: </Text>
 
                         <DateTimePicker
-                            value={machineState.attributes.find(a => a.key === attr.key)?.value as Date || new Date()}
+                            value={machineState.attributes.find(a => a.id === attr.id)?.value as Date || new Date()}
                             mode={'date'}
                             is24Hour={true}
-                            onChange={(_, date) => handleAttributeChange(attr.key, date, attr.type)}
+                            onChange={(_, date) => handleAttributeChange({ ...attr, value: date })}
                             style={{ marginLeft: -12 }}
                         />
                     </View>
@@ -89,8 +89,8 @@ export default function Machine(props: TMachine) {
                     <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
                         <Text style={machineStyles.fieldLabel}>{attr.key}: </Text>
                         <Switch
-                            onValueChange={value => handleAttributeChange(attr.key, value, attr.type)}
-                            value={Boolean(machineState.attributes.find(a => a.key === attr.key)?.value)}
+                            onValueChange={value => handleAttributeChange({ ...attr, value })}
+                            value={Boolean(machineState.attributes.find(a => a.id === attr.id)?.value)}
                         />
                     </View>
                 )
@@ -134,15 +134,22 @@ export default function Machine(props: TMachine) {
             width: `100%`,
             backgroundColor: '#2B7EFE11',
             borderRadius: 12,
-            padding: 16,
+            padding: 12,
             gap: 10
         }}>
-            <Text>{String(machineState.attributes.find(attr => selectedCategory.titleField === attr.key)?.value || '')}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={{ fontSize: 18, fontWeight: '400' }}>{String(machineState.attributes.find(attr => selectedCategory.titleField === attr.key)?.value || '')}</Text>
+                <View style={{ flexDirection: 'row', gap: 4 }}>
+                    <Button onPress={() => dispatch(deleteMachine(machineState.id))} style={{ ...machineStyles.iconButton, backgroundColor: 'hotpink' }}>Delete</Button>
+                    <Button onPress={() => setCollapsed(true)} style={{ ...machineStyles.iconButton, backgroundColor: '#2B7EFE' }}>Collapse</Button>
+                </View>
+            </View>
+
             {
                 selectedCategory.fields.map(field => (
                     <View key={field.key} style={{ flexDirection: 'row', columnGap: 4 }}>
                         {
-                            getAttributeComponent({ key: field.key, type: field.type, value: '' })
+                            getAttributeComponent({ ...field, value: '' })
                         }
                     </View>
                 ))

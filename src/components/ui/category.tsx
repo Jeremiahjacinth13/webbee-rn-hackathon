@@ -4,7 +4,7 @@ import { CategoryFieldType, Category as TCategory } from '../../types'
 import Divider from './divider'
 import Select from './select'
 import Button from './button'
-import { generateRandomUUID } from '../../utils'
+import { debounce, generateRandomUUID } from '../../utils'
 import { deleteCategory, editCategory } from '../../store/categorySlice'
 import { useAppDispatch } from '../../hooks'
 import { categoryFieldTypes } from '../../constants'
@@ -14,10 +14,11 @@ export default function Category(props: TCategory) {
     const [categoryState, setCategoryState] = React.useState<TCategory>(props)
     const [isCollapsed, setCollapsed] = React.useState<boolean>(false)
     const dispatch = useAppDispatch()
+    const debouncedDispatch = debounce(dispatch, 500)
 
 
     React.useEffect(() => {
-        dispatch(editCategory(categoryState))
+        debouncedDispatch(editCategory(categoryState))
     }, [categoryState])
 
     const handleFieldChange = React.useCallback((id: string, key: string, value: string) => {
@@ -80,8 +81,8 @@ export default function Category(props: TCategory) {
             padding: 16,
             gap: 10
         }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={categoryStyles.title}>{categoryState.name || ' '}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text ellipsizeMode='tail' numberOfLines={1} style={categoryStyles.title}>{categoryState.name || ' '}</Text>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
                     <Button onPress={() => dispatch(deleteCategory(categoryState.id))} style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}>Delete</Button>
                     <Button onPress={() => setCollapsed(true)} style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }}>Collapse</Button>
@@ -139,8 +140,12 @@ export default function Category(props: TCategory) {
 
 const categoryStyles = StyleSheet.create({
     title: {
-        fontSize: 20,
-        fontWeight: '500'
+        fontSize: 18,
+        fontWeight: '500',
+        overflow: 'hidden',
+        flex: 1,
+        flexWrap: 'nowrap',
+        paddingRight: 10
     },
     textInput: {
         backgroundColor: '#FFFFFF',

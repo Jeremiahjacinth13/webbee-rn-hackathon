@@ -21,7 +21,7 @@ export default function SingleCategory(props: ScreenProps) {
     const dispatch = useAppDispatch()
 
 
-    const DEFAULT_MACHINE: TMachine = React.useMemo(() => ({
+    const generateDefaultMachine = React.useCallback(() => ({
         id: generateRandomUUID(),
         typeId: selectedCategory?.id || '',
         attributes: selectedCategory?.fields.map((curr) => ({ ...curr, value: "" })) || []
@@ -45,7 +45,7 @@ export default function SingleCategory(props: ScreenProps) {
                     <Text style={{ fontSize: 24, fontWeight: '600' }}>{selectedCategory.name}</Text>
                     <Button
                         style={{ paddingHorizontal: 12 }}
-                        onPress={() => dispatch(createMachine(DEFAULT_MACHINE))}
+                        onPress={() => dispatch(createMachine(generateDefaultMachine()))}
                     >
                         Add {selectedCategory.name.toLowerCase()}
                     </Button>

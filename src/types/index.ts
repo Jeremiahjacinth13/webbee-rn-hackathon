@@ -22,9 +22,7 @@ export interface Category {
 export interface Machine {
     id: string,
     typeId: Category['id'],
-    attributes: {
-        key: string,
-        type: CategoryFieldType,
+    attributes: (CategoryFields & {
         value: string | boolean | number | Date
-    }[]
+    })[]
 }

@@ -15,6 +15,17 @@ export const getDefaultCategory = () => {
     return category
 }
 
-export function debounce(func: Function, time: number) {
+export function debounce<T extends Function>(fn: T, time: number): T {
+    let timeout: NodeJS.Timeout;
 
+    function debounced () {
+        if (timeout) {
+            clearTimeout(timeout)
+        } 
+        timeout = setTimeout(() => {
+            fn(...arguments)
+        }, time)
+    }
+
+    return debounced as unknown as T
 }
