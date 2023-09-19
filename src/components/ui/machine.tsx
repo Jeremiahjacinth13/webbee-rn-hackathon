@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { View, Text, StyleSheet, TextInput, Switch } from 'react-native'
-import { CategoryFieldType, CategoryFields, Category as TCategory, Machine as TMachine } from '../../types'
+import { CategoryFieldType, Machine as TMachine } from '../../types'
 
-import Select from './select'
 import Button from './button'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { editMachine, deleteMachine } from '../../store/machineSlice'
@@ -44,6 +43,9 @@ export default function Machine(props: TMachine) {
 
 
     const getAttributeComponent = React.useCallback((attr: TMachine['attributes'][number]) => {
+
+        const value = machineState.attributes.find(a => a.id === attr.id)?.value
+
         switch (attr.type) {
             case CategoryFieldType.text:
                 return (
@@ -54,7 +56,7 @@ export default function Machine(props: TMachine) {
                             style={{ ...machineStyles.textInput, flex: 2 }}
                             onChangeText={(text) => handleAttributeChange({ ...attr, value: text })}
                             placeholder={`Enter ${attr.key}`}
-                            value={machineState.attributes.find(a => a.id === attr.id)?.value.toString() || ''}
+                            value={(value || '').toString()}
                         />
                     </View>
                 )
@@ -76,12 +78,11 @@ export default function Machine(props: TMachine) {
                 return (
                     <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
                         <Text>{attr.key}: </Text>
-
                         <DateTimePicker
-                            value={machineState.attributes.find(a => a.id === attr.id)?.value as Date || new Date()}
+                            value={Number.isNaN(Date.parse(String(value))) ? new Date() : new Date(String(value))}
                             mode={'date'}
                             is24Hour={true}
-                            onChange={(_, date) => handleAttributeChange({ ...attr, value: date })}
+                            onChange={(_, date) => handleAttributeChange({ ...attr, value: date.toISOString() })}
                             style={{ marginLeft: -12 }}
                         />
                     </View>
@@ -93,7 +94,7 @@ export default function Machine(props: TMachine) {
                         <Switch
                             trackColor={{ false: "#767577", true: "#81b0ff" }}
                             onValueChange={value => handleAttributeChange({ ...attr, value })}
-                            value={Boolean(machineState.attributes.find(a => a.id === attr.id)?.value)}
+                            value={Boolean(value)}
                         />
                     </View>
                 )

@@ -30,10 +30,13 @@ export const machinesSlice = createSlice({
             if (categoryIndex !== -1) {
                 state.machines[categoryIndex] = action.payload
             }
+        },
+        initMachines: (state, action: PayloadAction<Machine[]>) => {
+            state.machines = action.payload
         }
     }
 })
 
-export const { createMachine, editMachine, deleteMachine } = machinesSlice.actions
+export const { createMachine, editMachine, deleteMachine, initMachines } = machinesSlice.actions
 
 export default machinesSlice.reducer

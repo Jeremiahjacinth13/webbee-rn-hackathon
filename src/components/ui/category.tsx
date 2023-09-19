@@ -130,6 +130,7 @@ export default function Category(props: TCategory) {
             <Select
                 onChange={(newValue) => setCategoryState({ ...categoryState, titleField: newValue })}
                 options={categoryState.fields.map(field => field.key)}
+                defaultValue={categoryState.titleField}
                 buttonStyle = {{
                     width: '100%'
                 }}
