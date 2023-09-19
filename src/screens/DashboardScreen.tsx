@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { View, Text, SafeAreaView, ScrollView, SectionList } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView, SectionList, Dimensions } from 'react-native'
 import { useAppSelector, useListColumn } from '../hooks'
-import { MachineListHeader } from '../components'
+import { Button, MachineListHeader } from '../components'
 import Machine from '../components/ui/machine'
+import { NavigationProp } from '@react-navigation/native'
 
-export default function DashboardScreen() {
+export default function DashboardScreen({ navigation } : { navigation: NavigationProp<any, any>}) {
     const { machines } = useAppSelector(store => store.machines)
     const columnCount = useListColumn({ mobile: 1, tab: 2 })
     const { categories } = useAppSelector(store => store.categories)
@@ -17,7 +18,7 @@ export default function DashboardScreen() {
     }, [categories, machines])
 
     return (
-        <SafeAreaView style={{ backgroundColor: 'white' }}>
+        <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
             <ScrollView style={{ padding: 16 }}>
                 {
                     processedData.map(data => (
@@ -51,8 +52,9 @@ export default function DashboardScreen() {
 
                 {
                     processedData.length === 0 && (
-                        <View style={{ height: 60, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ textAlign: 'center' }}>No category added</Text>
+                        <View style={{ height: Dimensions.get('window').height - 200, alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+                            <Text style={{ textAlign: 'center', fontSize: 24 }}>No category added</Text>
+                            <Button onPress={() => navigation.navigate('Categories')}>Go to categories</Button>
                         </View>
                     )
                 }

@@ -1,7 +1,7 @@
 
 export enum CategoryFieldType {
     text = 'Text',
-    boolean = 'Boolean',
+    boolean = 'Checkbox',
     date = "Date",
     number = "Number"
 }

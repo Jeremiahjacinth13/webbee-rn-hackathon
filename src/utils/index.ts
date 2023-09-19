@@ -7,7 +7,7 @@ export const getDefaultCategory = () => {
 
     const category: TCategory = {
         id: generateRandomUUID(),
-        name: "New Category",
+        name: "Unnamed Category",
         fields: [{ key: "", type: CategoryFieldType.text, id: generateRandomUUID() }],
         titleField: null
     }

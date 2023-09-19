@@ -43,7 +43,7 @@ function Routes() {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Categories">
+      <Drawer.Navigator initialRouteName="Dashboard">
         <Drawer.Screen name="Dashboard" component={DashboardScreen} options={{
           headerRight() {
             return (

@@ -7,10 +7,11 @@ interface SelectProps<T> {
     defaultValue?: T,
     onChange: (val: T) => void,
     buttonStyle?: SelectDropdownProps['buttonStyle'],
+    dropdownStyle?: SelectDropdownProps['dropdownStyle'],
 }
 
 
-export default function Select<T>({ onChange, defaultValue, options, buttonStyle }: SelectProps<T>) {
+export default function Select<T>({ onChange, defaultValue, options, buttonStyle, dropdownStyle }: SelectProps<T>) {
     return (
         <SelectDropdown
             defaultValue={defaultValue}
@@ -27,12 +28,12 @@ export default function Select<T>({ onChange, defaultValue, options, buttonStyle
                 borderWidth: 1,
                 paddingHorizontal: 0,
             }, buttonStyle])}
-            dropdownStyle={{
+            dropdownStyle={StyleSheet.flatten([{
                 borderRadius: 8,
                 marginTop: 2,
                 paddingVertical: 10,
                 height: 150
-            }}
+            }, dropdownStyle])}
             rowStyle={{
                 height: 32,
             }}

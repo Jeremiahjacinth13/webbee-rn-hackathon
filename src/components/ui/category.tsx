@@ -74,16 +74,17 @@ export default function Category(props: TCategory) {
                 </View>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
                     <Button
-                        style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}
-                        onPress={() => dispatch(deleteCategory(categoryState.id))}
-                    >
-                        <Ionicons name="trash-outline" size={18} color="white" />
-                    </Button>
-                    <Button
                         style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }}
                         onPress={() => setCollapsed(false)}
                     >
                         <Ionicons name="chevron-down" size={18} color="white" />
+                    </Button>
+
+                    <Button
+                        style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}
+                        onPress={() => dispatch(deleteCategory(categoryState.id))}
+                    >
+                        <Ionicons name="trash-outline" size={18} color="white" />
                     </Button>
                 </View>
             </View>
@@ -101,11 +102,12 @@ export default function Category(props: TCategory) {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text ellipsizeMode='tail' numberOfLines={1} style={categoryStyles.title}>{categoryState.name || ' '}</Text>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
-                    <Button onPress={() => dispatch(deleteCategory(categoryState.id))} style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}>
-                        <Ionicons name="trash-outline" size={18} color="white" />
-                    </Button>
                     <Button onPress={() => setCollapsed(true)} style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }}>
                         <Ionicons name="chevron-up" size={18} color="white" />
+                    </Button>
+
+                    <Button onPress={() => dispatch(deleteCategory(categoryState.id))} style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}>
+                        <Ionicons name="trash-outline" size={18} color="white" />
                     </Button>
                 </View>
             </View>
@@ -124,11 +126,17 @@ export default function Category(props: TCategory) {
             <Text style={{ marginBottom: -4 }}>Fields:</Text>
 
             {categoryState.fields.map(field => (
-                <View key={field.id} style={{ flexDirection: 'row', columnGap: 4 }}>
+                <View key={field.id} style={{ flexDirection: 'row', columnGap: 8 }}>
                     <Select
                         options={categoryFieldTypes}
                         defaultValue={field.type || CategoryFieldType.text}
                         onChange={(newValue) => handleFieldChange(field.id, 'type', newValue)}
+                        dropdownStyle={{
+                            width: 120
+                        }}
+                        buttonStyle={{
+                            width: 90
+                        }}
                     />
                     <TextInput
                         autoCapitalize='none'
@@ -166,7 +174,7 @@ export default function Category(props: TCategory) {
 
             <Text style={{ marginBottom: -4 }}>Title field:</Text>
             <Select
-                onChange={(newValue) => handleTitleFieldChange(newValue)}
+                onChange={(newValue) => handleTitleFieldChange(categoryState.fields.find(field => field.key === newValue)?.id)}
                 options={categoryState.fields.map(field => field.key)}
                 defaultValue={categoryState.titleField}
                 buttonStyle={{
@@ -199,7 +207,7 @@ const categoryStyles = StyleSheet.create({
         height: 32,
         borderRadius: 8,
         paddingHorizontal: 10,
-        borderColor: '#2B7EFEcc',
+        borderColor: '#2B7EFEaa',
         borderWidth: 1,
     },
     iconButton: {
