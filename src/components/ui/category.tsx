@@ -35,7 +35,10 @@ export default function Category(props: TCategory) {
                 return {
                     ...oldCategory,
                     fields,
-                    titleField: fields[0].key
+                    titleField: {
+                        label: fields[0].key,
+                        value: fields[0].id,
+                    }
                 }
             }
 
@@ -53,9 +56,15 @@ export default function Category(props: TCategory) {
         })
     }, [])
 
+    // new value is the string representation (the label) of the field
     const handleTitleFieldChange = React.useCallback((newValue: string) => {
+
         setHasSetTitleField(true)
-        setCategoryState((prevState) => ({ ...prevState, titleField: newValue }))
+
+        setCategoryState((prevState) => {
+            const matchingField = prevState.fields.find(field => field.key === newValue)
+            return ({ ...prevState, titleField: { value: matchingField.id, label: matchingField.key } })
+        })
     }, [])
 
     if (isCollapsed) {
@@ -176,7 +185,7 @@ export default function Category(props: TCategory) {
             <Select
                 onChange={(newValue) => handleTitleFieldChange(categoryState.fields.find(field => field.key === newValue)?.id)}
                 options={categoryState.fields.map(field => field.key)}
-                defaultValue={categoryState.titleField}
+                defaultValue={categoryState.titleField?.label}
                 buttonStyle={{
                     width: '100%'
                 }}

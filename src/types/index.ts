@@ -16,7 +16,10 @@ export interface Category {
     id: string,
     name: string,
     fields: CategoryFields[],
-    titleField: string | null,
+    titleField: ({
+        label: string,
+        value: string,
+    }) | null,
 }
 
 export interface Machine {

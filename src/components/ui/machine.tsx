@@ -116,7 +116,7 @@ export default function Machine(props: TMachine) {
             gap: 10
         }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ fontSize: 18, fontWeight: '400' }}>{String(machineState.attributes.find(attr => selectedCategory.titleField === attr.id)?.value || 'Unnamed Entity')}</Text>
+                <Text style={{ fontSize: 18, fontWeight: '400' }}>{String(machineState.attributes.find(attr => selectedCategory.titleField.value === attr.id)?.value || 'Unnamed Entity')}</Text>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
                     <Button 
                         onPress={() => dispatch(deleteMachine(machineState.id))} 
