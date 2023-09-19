@@ -9,12 +9,15 @@ import { deleteCategory, editCategory } from '../../store/categorySlice'
 import { useAppDispatch } from '../../hooks'
 import { categoryFieldTypes } from '../../constants'
 
+
 export default function Category(props: TCategory) {
 
     const [categoryState, setCategoryState] = React.useState<TCategory>(props)
     const [isCollapsed, setCollapsed] = React.useState<boolean>(false)
+    const [hasSetTitleField, setHasSetTitleField] = React.useState<boolean>(Boolean(props.titleField))
     const dispatch = useAppDispatch()
     const debouncedDispatch = React.useMemo(() => debounce(dispatch, 500), [])
+    const [ screenOrientation, setScreenOrientation ] = React.useState<any>()
 
 
     React.useEffect(() => {
@@ -27,9 +30,18 @@ export default function Category(props: TCategory) {
             const index = fields.findIndex(field => field.id === id)
 
             fields[index] = { ...fields[index], [key]: value }
+
+            if (!hasSetTitleField) {
+                return {
+                    ...oldCategory,
+                    fields,
+                    titleField: fields[0].key
+                }
+            }
+
             return { ...oldCategory, fields }
         })
-    }, [])
+    }, [hasSetTitleField])
 
     const removeField = React.useCallback((id: string) => {
         setCategoryState(oldCategory => {
@@ -39,6 +51,11 @@ export default function Category(props: TCategory) {
 
             return { ...oldCategory, fields }
         })
+    }, [])
+
+    const handleTitleFieldChange = React.useCallback((newValue: string) => {
+        setHasSetTitleField(true)
+        setCategoryState((prevState) => ({ ...prevState, titleField: newValue }))
     }, [])
 
     if (isCollapsed) {
@@ -89,7 +106,7 @@ export default function Category(props: TCategory) {
                 </View>
             </View>
 
-            <Text style = {{ fontSize: 12, marginBottom: -6 }}>Category name:</Text>
+            <Text style={{ fontSize: 12, marginBottom: -6 }}>Category name:</Text>
 
             <TextInput
                 style={categoryStyles.textInput}
@@ -100,7 +117,7 @@ export default function Category(props: TCategory) {
 
             <Divider style={{ marginVertical: 4 }} />
 
-            <Text style = {{ fontSize: 12, marginBottom: -6 }}>Fields:</Text>
+            <Text style={{ fontSize: 12, marginBottom: -6 }}>Fields:</Text>
 
             {categoryState.fields.map(field => (
                 <View key={field.id} style={{ flexDirection: 'row', columnGap: 4 }}>
@@ -126,15 +143,23 @@ export default function Category(props: TCategory) {
 
             <Divider style={{ marginVertical: 6 }} />
 
-            <Text style = {{ fontSize: 12, marginBottom: -6 }}>Title field:</Text>
+            <Text style={{ fontSize: 12, marginBottom: -6 }}>Title field:</Text>
             <Select
-                onChange={(newValue) => setCategoryState({ ...categoryState, titleField: newValue })}
+                onChange={(newValue) => handleTitleFieldChange(newValue)}
                 options={categoryState.fields.map(field => field.key)}
                 defaultValue={categoryState.titleField}
-                buttonStyle = {{
+                buttonStyle={{
                     width: '100%'
                 }}
             />
+
+            {/* <Button onPress={async () => {
+                const o =  
+                console.log(o)
+                setScreenOrientation(o)
+            }}>{String(screenOrientation)}</Button> */}
+
+
         </View>
     )
 }

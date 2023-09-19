@@ -2,10 +2,9 @@ import * as React from 'react';
 import { View, Text, ListRenderItem, FlatList } from 'react-native'
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { Button } from '../components';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { useAppDispatch, useAppSelector, useListColumn } from '../hooks';
 import { createMachine, editMachine, deleteMachine } from '../store/machineSlice';
-import { Machine as TMachine } from '../types';
+import { Machine as TMachine, Category as TCategory } from '../types';
 import { generateRandomUUID } from '../utils';
 import Machine from '../components/ui/machine';
 
@@ -19,7 +18,7 @@ export default function SingleCategory(props: ScreenProps) {
     const { machines } = useAppSelector(store => store.machines)
     const selectedCategory = categories.find(category => category.id === props.route.name)
     const dispatch = useAppDispatch()
-
+    const columnCount = useListColumn({ mobile: 1, tab: 2 })
 
     const generateDefaultMachine = React.useCallback(() => ({
         id: generateRandomUUID(),
@@ -27,16 +26,19 @@ export default function SingleCategory(props: ScreenProps) {
         attributes: selectedCategory?.fields.map((curr) => ({ ...curr, value: "" })) || []
     }), [selectedCategory])
 
-
-    const _renderItem: ListRenderItem<TMachine> = ({ item }) => {
+    const _renderItem: ListRenderItem<TMachine> = ({ item, index }) => {
         return (
-            <Machine {...item} />
+            <View style={{ width: `${(100 / columnCount)}%`, paddingRight: columnCount > 1 ? index % 2 === 1 ? 0 : 12 : 0, paddingLeft: columnCount > 1 ? index % 2 === 1 ? 12 : 0 : 0 }}>
+                <Machine {...item} />
+            </View>
         )
     }
 
     return (
         <FlatList
-            contentContainerStyle={{ padding: 16, gap: 16 }}
+            key={columnCount}
+            contentContainerStyle={{ padding: 16, gap: 24 }}
+            numColumns={columnCount}
             data={machines.filter(machine => machine.typeId === selectedCategory?.id)}
             renderItem={_renderItem}
             keyExtractor={(item) => item.id}

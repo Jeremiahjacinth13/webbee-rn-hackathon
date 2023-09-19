@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Text, StyleSheet, TextInput, Switch } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Switch, useWindowDimensions } from 'react-native'
 import { CategoryFieldType, Machine as TMachine } from '../../types'
 
 import Button from './button'
@@ -14,6 +14,7 @@ export default function Machine(props: TMachine) {
     const { categories } = useAppSelector(store => store.categories)
     const selectedCategory = categories.find(category => category.id === props.typeId)
     const [machineState, setMachineState] = React.useState<TMachine>(props)
+    const windowDimensions = useWindowDimensions()
 
     const [isCollapsed, setCollapsed] = React.useState<boolean>(false)
     const dispatch = useAppDispatch()
@@ -92,7 +93,7 @@ export default function Machine(props: TMachine) {
                     <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
                         <Text style={machineStyles.fieldLabel}>{attr.key}: </Text>
                         <Switch
-                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                            trackColor={{ false: "#767577", true: "#2B7EFE" }}
                             onValueChange={value => handleAttributeChange({ ...attr, value })}
                             value={Boolean(value)}
                         />
@@ -101,55 +102,23 @@ export default function Machine(props: TMachine) {
         }
     }, [machineState])
 
-    // if (isCollapsed) {
-    //     return (
-    //         <View style={{
-    //             width: `100%`,
-    //             backgroundColor: '#2B7EFE11',
-    //             borderRadius: 12,
-    //             padding: 16,
-    //             flexDirection: 'row',
-    //             justifyContent: 'space-between'
-    //         }}>
-    //             <View style={{ gap: 10 }}>
-    //                 <Text style={machineStyles.title}>Title: {categoryState.name || ' '}</Text>
-    //                 <Text>Number of fields: {categoryState.fields.length}</Text>
-    //             </View>
-    //             <View style={{ flexDirection: 'row', gap: 4 }}>
-    //                 <Button
-    //                     style={{ ...machineStyles.iconButton, backgroundColor: 'hotpink' }}
-    //                     onPress={() => dispatch(deleteCategory(categoryState.id))}
-    //                 >
-    //                     Delete
-    //                 </Button>
-    //                 <Button
-    //                     style={{ ...machineStyles.iconButton, backgroundColor: '#2B7EFE' }}
-    //                     onPress={() => setCollapsed(false)}
-    //                 >
-    //                     Edit
-    //                 </Button>
-    //             </View>
-    //         </View>
-    //     )
-    // }
-
     return (
         <View style={{
             width: `100%`,
             backgroundColor: '#2B7EFE11',
             borderRadius: 12,
-            padding: 12,
+            padding: windowDimensions.width > 600 ? 20 : 12,
             gap: 10
         }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={{ fontSize: 18, fontWeight: '400' }}>{String(machineState.attributes.find(attr => selectedCategory.titleField === attr.key)?.value || '')}</Text>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
                     <Button onPress={() => dispatch(deleteMachine(machineState.id))} style={{ ...machineStyles.iconButton, backgroundColor: 'hotpink' }}>Delete</Button>
-                    <Button onPress={() => setCollapsed(true)} style={{ ...machineStyles.iconButton, backgroundColor: '#2B7EFE' }}>Collapse</Button>
+                    <Button onPress={() => setCollapsed(!isCollapsed)} style={{ ...machineStyles.iconButton, backgroundColor: '#2B7EFE' }}>{isCollapsed ? 'Edit' : 'Collapse'}</Button>
                 </View>
             </View>
-
             {
+                !isCollapsed &&
                 selectedCategory.fields.map(field => (
                     <View key={field.key} style={{ flexDirection: 'row', columnGap: 4 }}>
                         {

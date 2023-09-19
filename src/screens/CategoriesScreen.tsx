@@ -12,16 +12,19 @@ export default function CategoryScreen() {
     const columnCount = useListColumn({ mobile: 1, tab: 2 })
     const dispatch = useAppDispatch()
 
-    const _renderItem: ListRenderItem<TCategory> = ({ item }) => {
+    const _renderItem: ListRenderItem<TCategory> = ({ item, index }) => {
         return (
-            <Category {...item} />
+            <View style={{ width: `${(100/columnCount)}%`, paddingRight: columnCount > 1 ? index % 2 === 1 ? 0 : 12 : 0, paddingLeft: columnCount > 1 ? index % 2 === 1 ? 12 : 0 : 0}}>
+                <Category {...item} />
+            </View>
         )
     }
 
     return (
         <>
             <FlatList
-                contentContainerStyle={{ padding: 16, gap: 16 }}
+                key={columnCount}
+                contentContainerStyle={{ padding: 16, gap: 24 }}
                 data={categories}
                 renderItem={_renderItem}
                 keyExtractor={(item) => item.id}

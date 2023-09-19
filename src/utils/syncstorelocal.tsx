@@ -15,7 +15,6 @@ export default function SyncStoreLocal({ children }: { children: React.ReactNode
         (async function () {
             if (categories.length > 0 || machines.length > 0) {
                 const store = { machines, categories }
-                console.log('updating store with values:', JSON.stringify(store, null, 3))
                 await AsyncStorage.setItem('store', JSON.stringify(store))
             }
         })()
@@ -24,8 +23,6 @@ export default function SyncStoreLocal({ children }: { children: React.ReactNode
     React.useEffect(() => {
         (async function () {
             const { categories, machines } = JSON.parse(await AsyncStorage.getItem('store')) as ({ categories: Category[], machines: Machine[] })
-
-            console.log(JSON.stringify(categories, null, 3), JSON.stringify(machines, null, 3))
 
             if (categories) {
                 dispatch(initCategories(categories))
