@@ -8,6 +8,7 @@ import { debounce, generateRandomUUID } from '../../utils'
 import { deleteCategory, editCategory } from '../../store/categorySlice'
 import { useAppDispatch } from '../../hooks'
 import { categoryFieldTypes } from '../../constants'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 
 export default function Category(props: TCategory) {
@@ -17,7 +18,6 @@ export default function Category(props: TCategory) {
     const [hasSetTitleField, setHasSetTitleField] = React.useState<boolean>(Boolean(props.titleField))
     const dispatch = useAppDispatch()
     const debouncedDispatch = React.useMemo(() => debounce(dispatch, 500), [])
-    const [ screenOrientation, setScreenOrientation ] = React.useState<any>()
 
 
     React.useEffect(() => {
@@ -62,13 +62,13 @@ export default function Category(props: TCategory) {
         return (
             <View style={{
                 width: `100%`,
-                backgroundColor: '#2B7EFE11',
-                borderRadius: 12,
-                padding: 16,
+                backgroundColor: '#2d7bf10f',
+                borderRadius: 8,
+                padding: 12,
                 flexDirection: 'row',
                 justifyContent: 'space-between'
             }}>
-                <View style={{ gap: 10 }}>
+                <View style={{ gap: 8 }}>
                     <Text style={categoryStyles.title}>Title: {categoryState.name || ' '}</Text>
                     <Text>Number of fields: {categoryState.fields.length}</Text>
                 </View>
@@ -77,13 +77,13 @@ export default function Category(props: TCategory) {
                         style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}
                         onPress={() => dispatch(deleteCategory(categoryState.id))}
                     >
-                        Delete
+                        <Ionicons name="trash-outline" size={18} color="white" />
                     </Button>
                     <Button
                         style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }}
                         onPress={() => setCollapsed(false)}
                     >
-                        Edit
+                        <Ionicons name="chevron-down" size={18} color="white" />
                     </Button>
                 </View>
             </View>
@@ -93,20 +93,24 @@ export default function Category(props: TCategory) {
     return (
         <View style={{
             width: `100%`,
-            backgroundColor: '#2B7EFE11',
-            borderRadius: 12,
-            padding: 16,
+            backgroundColor: '#2d7bf10f',
+            borderRadius: 8,
+            padding: 12,
             gap: 10
         }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text ellipsizeMode='tail' numberOfLines={1} style={categoryStyles.title}>{categoryState.name || ' '}</Text>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
-                    <Button onPress={() => dispatch(deleteCategory(categoryState.id))} style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}>Delete</Button>
-                    <Button onPress={() => setCollapsed(true)} style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }}>Collapse</Button>
+                    <Button onPress={() => dispatch(deleteCategory(categoryState.id))} style={{ ...categoryStyles.iconButton, backgroundColor: 'hotpink' }}>
+                        <Ionicons name="trash-outline" size={18} color="white" />
+                    </Button>
+                    <Button onPress={() => setCollapsed(true)} style={{ ...categoryStyles.iconButton, backgroundColor: '#2B7EFE' }}>
+                        <Ionicons name="chevron-up" size={18} color="white" />
+                    </Button>
                 </View>
             </View>
 
-            <Text style={{ fontSize: 12, marginBottom: -6 }}>Category name:</Text>
+            <Text style={{ marginBottom: -4 }}>Category name:</Text>
 
             <TextInput
                 style={categoryStyles.textInput}
@@ -115,9 +119,9 @@ export default function Category(props: TCategory) {
                 value={categoryState.name}
             />
 
-            <Divider style={{ marginVertical: 4 }} />
+            <Divider style={{ marginVertical: 0 }} />
 
-            <Text style={{ fontSize: 12, marginBottom: -6 }}>Fields:</Text>
+            <Text style={{ marginBottom: -4 }}>Fields:</Text>
 
             {categoryState.fields.map(field => (
                 <View key={field.id} style={{ flexDirection: 'row', columnGap: 4 }}>
@@ -134,16 +138,33 @@ export default function Category(props: TCategory) {
                         value={field.key}
                     />
                     <Button style={categoryStyles.iconButton} onPress={() => removeField(field.id)}>
-                        <Text style={{ fontSize: 12 }}>Remove</Text>
+                        <Ionicons name="trash-outline" size={18} color="white" />
                     </Button>
                 </View>
             ))}
 
-            <Button onPress={() => setCategoryState({ ...categoryState, fields: [...categoryState.fields, { key: "", type: CategoryFieldType.text, id: generateRandomUUID() }] })}>Add New Field</Button>
+            <View style={{ flexDirection: 'row' }}>
+                <Button
+                    onPress={() => setCategoryState({
+                        ...categoryState,
+                        fields: [
+                            ...categoryState.fields,
+                            { key: "", type: CategoryFieldType.text, id: generateRandomUUID() }
+                        ]
+                    })
+                    }
+
+                    style={{
+                        paddingHorizontal: 12,
+                    }}
+                >
+                    Add New Field
+                </Button>
+            </View>
 
             <Divider style={{ marginVertical: 6 }} />
 
-            <Text style={{ fontSize: 12, marginBottom: -6 }}>Title field:</Text>
+            <Text style={{ marginBottom: -4 }}>Title field:</Text>
             <Select
                 onChange={(newValue) => handleTitleFieldChange(newValue)}
                 options={categoryState.fields.map(field => field.key)}
@@ -166,7 +187,7 @@ export default function Category(props: TCategory) {
 
 const categoryStyles = StyleSheet.create({
     title: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '500',
         overflow: 'hidden',
         flex: 1,
@@ -185,7 +206,8 @@ const categoryStyles = StyleSheet.create({
         backgroundColor: 'hotpink',
         paddingHorizontal: 4,
         paddingVertical: 0,
-        height: 32,
+        height: 30,
+        width: 30,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 8

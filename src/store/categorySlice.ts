@@ -1,9 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { Category } from '../types'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-
 
 const initialState: {
     categories: Category[]
@@ -34,10 +31,19 @@ export const categorySlice = createSlice({
         },
         initCategories: (state, action: PayloadAction<Category[]>) => {
             state.categories = action.payload
+        },
+        resetCategories: (state) => {
+            state.categories = []
         }
     },
 })
 
-export const { createCategory, deleteCategory, editCategory, initCategories } = categorySlice.actions
+export const { 
+    createCategory, 
+    deleteCategory, 
+    editCategory, 
+    initCategories,
+    resetCategories
+} = categorySlice.actions
 
 export default categorySlice.reducer

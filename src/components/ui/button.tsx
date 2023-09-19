@@ -19,6 +19,6 @@ const pressableStyle = StyleSheet.create({
         backgroundColor: '#2B7EFE',
         paddingHorizontal: 24,
         paddingVertical: 10,
-        borderRadius: 12,
+        borderRadius: 8,
     }
 })

@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import { editMachine, deleteMachine } from '../../store/machineSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { debounce } from '../../utils'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 
 export default function Machine(props: TMachine) {
@@ -14,6 +15,7 @@ export default function Machine(props: TMachine) {
     const { categories } = useAppSelector(store => store.categories)
     const selectedCategory = categories.find(category => category.id === props.typeId)
     const [machineState, setMachineState] = React.useState<TMachine>(props)
+    const externalMachineState = useAppSelector(store => store.machines).machines.find(machine => machine.id === props.id)
     const windowDimensions = useWindowDimensions()
 
     const [isCollapsed, setCollapsed] = React.useState<boolean>(false)
@@ -24,6 +26,10 @@ export default function Machine(props: TMachine) {
     React.useEffect(() => {
         debouncedDispatch(editMachine(machineState))
     }, [machineState])
+
+    React.useEffect(() => {
+        setMachineState(externalMachineState)
+    }, [externalMachineState])
 
     const handleAttributeChange = React.useCallback(({ key, value, id, type }: TMachine['attributes'][number]) => {
 
@@ -41,7 +47,6 @@ export default function Machine(props: TMachine) {
             return newMachineState
         })
     }, [])
-
 
     const getAttributeComponent = React.useCallback((attr: TMachine['attributes'][number]) => {
 
@@ -111,10 +116,17 @@ export default function Machine(props: TMachine) {
             gap: 10
         }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ fontSize: 18, fontWeight: '400' }}>{String(machineState.attributes.find(attr => selectedCategory.titleField === attr.key)?.value || '')}</Text>
+                <Text style={{ fontSize: 18, fontWeight: '400' }}>{String(machineState.attributes.find(attr => selectedCategory.titleField === attr.key)?.value || 'Unnamed Entity')}</Text>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
-                    <Button onPress={() => dispatch(deleteMachine(machineState.id))} style={{ ...machineStyles.iconButton, backgroundColor: 'hotpink' }}>Delete</Button>
-                    <Button onPress={() => setCollapsed(!isCollapsed)} style={{ ...machineStyles.iconButton, backgroundColor: '#2B7EFE' }}>{isCollapsed ? 'Edit' : 'Collapse'}</Button>
+                    <Button 
+                        onPress={() => dispatch(deleteMachine(machineState.id))} 
+                        style={{ ...machineStyles.iconButton, backgroundColor: 'hotpink' }}
+                    >
+                        <Ionicons name="trash-outline" size={18} color="white" />
+                    </Button>
+                    <Button onPress={() => setCollapsed(!isCollapsed)} style={{ ...machineStyles.iconButton, backgroundColor: '#2B7EFE' }}>
+                        <Ionicons name="chevron-down" size={18} color="white" />
+                    </Button>
                 </View>
             </View>
             {
@@ -139,7 +151,7 @@ const machineStyles = StyleSheet.create({
     },
     textInput: {
         backgroundColor: '#FFFFFF',
-        height: 40,
+        height: 32,
         borderRadius: 8,
         paddingHorizontal: 10,
         borderColor: '#2B7EFEcc',
@@ -150,13 +162,14 @@ const machineStyles = StyleSheet.create({
         paddingHorizontal: 4,
         paddingVertical: 0,
         height: 32,
+        width: 32,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 8
     },
     fieldLabel: {
         textTransform: 'capitalize',
-        width: 80
+        width: 90
     }
 
 })

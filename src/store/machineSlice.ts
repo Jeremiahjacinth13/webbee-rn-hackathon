@@ -33,10 +33,19 @@ export const machinesSlice = createSlice({
         },
         initMachines: (state, action: PayloadAction<Machine[]>) => {
             state.machines = action.payload
+        },
+        resetMachines: (state) => {
+            state.machines = []
         }
     }
 })
 
-export const { createMachine, editMachine, deleteMachine, initMachines } = machinesSlice.actions
+export const { 
+    createMachine, 
+    editMachine, 
+    deleteMachine, 
+    initMachines,
+    resetMachines
+} = machinesSlice.actions
 
 export default machinesSlice.reducer
